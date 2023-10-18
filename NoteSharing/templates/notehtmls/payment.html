@@ -1,0 +1,248 @@
+{% extends 'notehtmls/base.html' %} {% load static %} {% block title %}Payment Page{% endblock %} {% block content %}
+<style>
+    /* Custom CSS for styling */
+    
+    .container {
+        margin-top: 2rem;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #f8f9fa;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+    
+    .btn-success:hover {
+        background-color: #1e7e34;
+    }
+    /* Reduced card size and improved fonts */
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    
+    .card-text {
+        font-size: 1rem;
+    }
+    /* Added hover animation */
+    
+    .card:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s ease-in-out;
+    }
+    /* Additional styles for responsiveness */
+    
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 0.75rem;
+        }
+    }
+</style>
+<div class="container mt-4">
+    <div class="row mt-4">
+        <div class="col-md-12 card shadow-lg mx-2 h-auto">
+            <h1 class="text-center">Checkout</h1>
+            <div class="card-body">
+                <h2 class="text-left">Cart:</h2>
+                <!-- Cart block for each product -->
+                {% for product in z %}
+                <div class="card mb-3">
+                    <div class="card-body" id="cart-data" style="display: space-between;">
+                        <h4>{{ product.get_year_display }}</h4>
+                        <h4>Price: {{ product.subject }}</h4>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 card shadow-lg mx-2 h-100">
+            <div id="ship" class="card-body">
+                <h2>Shipping Address:</h2>
+                <!-- Add form fields for address input here -->
+                <form id="addressForm" required>
+                    <div class="mb-3">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address">Address:</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="city">City:</label>
+                        <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="zipcode">Zip Code:</label>
+                        <input type="text" class="form-control" id="zipcode" name="zipcode" required>
+                    </div>
+                    <!-- Add more address fields as needed -->
+                    <button type="submit" class="btn btn-secondary">Submit Address</button>
+                </form>
+
+                <!-- Display the submitted address (initially hidden) -->
+                <div id="submittedAddress" style="display: none;">
+                    <p>Name: <span id="nameDisplay"></span></p>
+                    <p>Phone Number: <span id="phoneDisplay"></span></p>
+                    <p>Address: <span id="addressDisplay"></span></p>
+                    <p>City: <span id="cityDisplay"></span></p>
+                    <p>Zip Code: <span id="zipcodeDisplay"></span></p>
+                    <button id="editAddressBtn" class="btn btn-secondary">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 card shadow-lg mx-2 h-100">
+            <div id="pay" class="card-body">
+                <h2>Payment Options:</h2>
+                <br>
+                <div>
+                    <h4>Choose:</h3>
+                        <select id="paymentMethod" class="form-control">
+                        <option value="cash">Cash on Delivery (COD)</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                </div>
+                <!-- Display UPI details (initially hidden) -->
+                <div id="upiDetails" style="display: none;">
+                    <h3>UPI Details:</h3>
+                    <p>UPI ID: your-upi-id@example.com</p>
+                    <img src="{% static 'images/upi_qr_code.png' %}" alt="UPI QR Code">
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12 card shadow-lg mx-auto">
+                        <div class="card-body">
+                            <div id="upiFileUpload" style="display: none;">
+                                <h3>Upload UPI Transaction Screenshot:</h3>
+                                <input type="file" id="transactionScreenshot" name="transactionScreenshot" accept="image/*" required>
+                            </div>
+
+                            <!-- Final submit button -->
+                            <button type="button" id="finalSubmitBtn" class="btn btn-success btn-block">Submit Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 card shadow-lg mx-auto">
+            <div class="card-body">
+                <div id="successBlock" style="display: none;">
+                    <h2 class="text-center">Order Successful</h2>
+                    <p class="text-center">Thank you for your order.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle form submission and edit button
+    document.getElementById('addressForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get the submitted values
+        var name = document.getElementById('name').value;
+        var phone = document.getElementById('phone').value;
+        var address = document.getElementById('address').value;
+        var city = document.getElementById('city').value;
+        var zipcode = document.getElementById('zipcode').value;
+
+        // Display the submitted values
+        document.getElementById('nameDisplay').textContent = name;
+        document.getElementById('phoneDisplay').textContent = phone;
+        document.getElementById('addressDisplay').textContent = address;
+        document.getElementById('cityDisplay').textContent = city;
+        document.getElementById('zipcodeDisplay').textContent = zipcode;
+
+        // Show the submitted address block and hide the form
+        document.getElementById('submittedAddress').style.display = 'block';
+        document.getElementById('addressForm').style.display = 'none';
+    });
+
+    // Add functionality for the "Edit" button
+    document.getElementById('editAddressBtn').addEventListener('click', function() {
+        // Hide the submitted address block and show the form for editing
+        document.getElementById('submittedAddress').style.display = 'none';
+        document.getElementById('addressForm').style.display = 'block';
+    });
+
+    // Handle payment method selection
+    document.getElementById('paymentMethod').addEventListener('change', function() {
+        var selectedMethod = this.value;
+        var upiDetails = document.getElementById('upiDetails');
+
+        if (selectedMethod === 'upi') {
+            // Show UPI details when UPI is selected
+            upiDetails.style.display = 'block';
+        } else {
+            // Hide UPI details for other payment methods
+            upiDetails.style.display = 'none';
+        }
+    });
+    document.getElementById('paymentMethod').addEventListener('change', function() {
+        var selectedMethod = this.value;
+        var upiDetails = document.getElementById('upiDetails');
+        var upiFileUpload = document.getElementById('upiFileUpload');
+
+        if (selectedMethod === 'upi') {
+            // Show UPI details and file upload for UPI payments
+            upiDetails.style.display = 'block';
+            upiFileUpload.style.display = 'block';
+        } else {
+            // Hide UPI details and file upload for other payment methods
+            upiDetails.style.display = 'none';
+            upiFileUpload.style.display = 'none';
+        }
+    });
+    // Handle final submit button click
+    document.getElementById('finalSubmitBtn').addEventListener('click', function() {
+        var selectedMethod = document.getElementById('paymentMethod').value;
+
+        if (selectedMethod === 'upi') {
+            // Check if a file is selected for UPI payments
+            var fileInput = document.getElementById('transactionScreenshot');
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                alert('Please upload a transaction screenshot for UPI payment.');
+                return;
+            }
+        }
+        // Hide all blocks except the success block
+        document.getElementById('submittedAddress').style.display = 'none';
+        document.getElementById('upiFileUpload').style.display = 'none';
+        document.getElementById('ship').style.display = 'none';
+        document.getElementById('pay').style.display = 'none';
+        document.getElementById('paymentMethod').style.display = 'none';
+        document.getElementById('finalSubmitBtn').style.display = 'none';
+        document.getElementById('successBlock').style.display = 'block';
+    });
+</script>
+{% endblock %}

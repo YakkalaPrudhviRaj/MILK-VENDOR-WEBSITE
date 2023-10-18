@@ -1,0 +1,72 @@
+{% extends 'notehtmls/base.html' %} {% block title %}Products List{% endblock %} {% block content %}
+<style>
+    /* Custom CSS for background image */
+    
+    body {
+        background-image: url('https://i.guim.co.uk/img/media/192d4774b85c67742e44f79daddb93bfb7b5339b/847_0_6513_3909/master/6513.jpg?width=465&dpr=1&s=none');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    /* Additional styles for the card */
+    
+    .card {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* Add a semi-transparent white background to the card for better readability */
+        padding: 20px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3 card shadow-lg mx-2 h-100">
+            <div class="card-body">
+                <h4>Add Products</h4>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %} {% for i in p %} {{i}} {% endfor %}
+                    <div class="row my-2">
+                        <div class="col">
+                            <input type="reset" value="Clear" class="form-control btn btn-outline-danger">
+                        </div>
+                        <div class="col">
+                            <input type="submit" value="Add Product" class="form-control btn btn-outline-success">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md card shadow-lg mx-2 h-100">
+            <div class="card-body">
+                <h4>Product List</h4>
+                <table class="table">
+                    <tr>
+                        <th>Sno</th>
+                        <th>Location</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for j in z %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{j.branch}}</td>
+                        <td>{{j.get_year_display}}</td>
+                        <td>{{j.subject}}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'edit_note' j.id %}" class="btn btn-outline-info form-control">Edit</a>
+                                </div>
+                                <div class="col">
+                                    <a href="{% url 'delete_note' j.id %}" class="btn btn-outline-danger 
+								form-control">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

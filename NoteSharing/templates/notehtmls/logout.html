@@ -1,0 +1,28 @@
+{% extends 'notehtmls/base.html' %} {% block title %}Logout{% endblock %} {% block content %}
+<style>
+    /* Custom CSS for background image */
+    
+    body {
+        background-image: url('https://img.freepik.com/premium-photo/world-milk-day-illustration-with-cow-field-background-with-bottle-milk-generative-ai_834602-12313.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    /* Additional styles for the card */
+    
+    .card {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* Add a semi-transparent white background to the card for better readability */
+        padding: 20px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="card col-md-5 mx-auto shadow-lg">
+        <div class="card-body">
+            <h4>Logout</h4>
+            <h6>Need to Login Again?</h6>
+            <a href="{% url 'lg' %}" class="btn btn-outline-info btn-block">Login Here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

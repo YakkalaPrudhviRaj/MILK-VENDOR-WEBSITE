@@ -1,0 +1,64 @@
+{% extends 'notehtmls/base.html' %} {% block title %}Merchant List{% endblock %} {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        {% for key, value in z.items %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h4 class="card-title">{{ value.username }}</h4>
+                    <p class="card-text">Location: {{ value.location }}</p>
+                    <p class="card-text">Contact: {{ value.contact }}</p>
+                    <a href="tel:{{ value.contact }}" class="btn btn-success contact-btn">Contact</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Custom CSS for styling */
+    
+    body {
+        background-image: url('https://media.istockphoto.com/id/1297005736/photo/young-couple-villagers-with-milk-cans.jpg?s=612x612&w=0&k=20&c=Ga1IBi5reSc3hVu9V8ELa9sAyKxYcWxkRJRdrAj8vTA=');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    /* Additional styles for the card */
+    
+    .card {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* Add a semi-transparent white background to the card for better readability */
+        padding: 20px;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    
+    .card-text {
+        font-size: 1rem;
+    }
+    
+    .contact-btn {
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}

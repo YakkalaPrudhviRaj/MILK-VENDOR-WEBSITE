@@ -1,0 +1,53 @@
+{% extends 'notehtmls/base.html' %} {% block title %}Prodcuts List{% endblock %} {% block content %}
+<style>
+    /* Custom CSS for styling */
+    
+    .product-card {
+        border: 1px solid #060606;
+        border-radius: 10px;
+        padding: 15px;
+        transition: transform 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #fff;
+    }
+    
+    .product-card:hover {
+        transform: scale(1.05);
+    }
+    /* Custom CSS for background image */
+    
+    body {
+        background-image: url('https://cdn-prod.medicalnewstoday.com/content/images/articles/296/296564/milk.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    /* Additional styles for the card */
+    
+    .card {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* Add a semi-transparent white background to the card for better readability */
+        padding: 20px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="row">
+        {% for j in z %}
+        <div class="col-md-4 mb-4">
+            <div class="card product-card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ j.get_year_display }}</h4>
+                    <p class="card-text"><strong>Subject:</strong> {{ j.subject }}</p>
+                    <p class="card-text"><strong>Description:</strong> {{ j.descnote }}</p>
+                    <div class="row">
+                        <div class="col">
+                            <a href="/payment/{{ j.id }}" class="btn btn-success btn-block">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

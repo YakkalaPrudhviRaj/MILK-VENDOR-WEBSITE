@@ -1,0 +1,152 @@
+{% extends 'notehtmls/base.html' %} {% block title %}Profile{% endblock %} {% block content %}
+<style>
+    /* Custom CSS for styling */
+    
+    body {
+        background-image: url('https://ananda.in/wp-content/uploads/2022/04/banner4-min.webp');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    /* Additional styles for the card */
+    
+    .card {
+        background-color: rgba(255, 255, 255, 0.8);
+        /* Add a semi-transparent white background to the card for better readability */
+        padding: 20px;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .profile-card:hover,
+    .update-profile-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .btn-outline-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .btn-outline-success:hover {
+        background-color: #1e7e34;
+        border-color: #1e7e34;
+    }
+    
+    .rounded-circle.profile-image {
+        max-width: 150px;
+        max-height: 150px;
+        border: 3px solid #28a745;
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .profile-card:hover .rounded-circle.profile-image {
+        transform: rotate(360deg);
+    }
+    /* Responsive design for small screens */
+    
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1rem;
+        }
+    }
+</style>
+<div class="container mt-4">
+    <div class="row">
+        <div class="card col-md-3 shadow-lg h-100 m-2">
+            <div class="card-body text-center">
+                <img src="{{request.user.pfimg.url}}" class="rounded-circle" height="150px" width="150px">
+                <h4>{{request.user.username}}</h4>
+            </div>
+        </div>
+        <div class="card col-md shadow-lg h-100 m-2">
+            <div class="card-body">
+                <h4>User Details</h4>
+                <table class="table">
+                    <tr>
+                        <td>First Name</td>
+                        <td>{{request.user.first_name}}</td>
+                        <td>Last Name</td>
+                        <td>{{request.user.last_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Unique ID</td>
+                        <td>{{request.user.uq}}</td>
+                        <td>Email</td>
+                        <td>{{request.user.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td>{{request.user.gd}}</td>
+                        <td>Mobile Number</td>
+                        <td>{{request.user.mb}}</td>
+                    </tr>
+                    <tr>
+                        <td>Role Type</td>
+                        <td>
+                            {% if request.user.role == 'G' %}
+                            <p class="badge badge-warning">Guest</p>
+                            {% elif request.user.role == 'T' %}
+                            <p class="badge badge-info">Merchant</p>
+                            {% elif request.user.role == 'D' %}
+                            <p class="badge badge-info">Doctor</p>
+                            {% else %}
+                            <p class="badge badge-success">Customer</p>
+                            {% endif %}
+                        </td>
+                        <td>Account Status</td>
+                        <td>
+                            {% if request.user.is_active %}
+                            <p class="badge badge-success">Active</p>
+                            {% else %}
+                            <p class="badge badge-danger">In-Active</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Account Created</td>
+                        <td>{{request.user.date_joined}}</td>
+                        <td>Last Login</td>
+                        <td>{{request.user.last_login}}</td>
+                    </tr>
+
+                    {% if request.user.is_teacher == 1 %}
+                    <tr>
+                        <td>Location</td>
+                        <td>{{request.user.tprofile.branch}}</td>
+                        <td>Subject</td>
+                        <td>{{request.user.tprofile.subjects}}</td>
+                    </tr>
+
+                    {% elif request.user.is_doctor == 1 %}
+                    <tr>
+                        <td>Location</td>
+                        <td>{{request.user.dprofile.branch}}</td>
+                        <td>Subject</td>
+                        <td>{{request.user.dprofile.designation}}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td>Location</td>
+                        <td>{{request.user.sprofile.branch}}</td>
+                        <td>Year</td>
+                        <td>{{request.user.sprofile.year}}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                <a href="{% url 'uppfle' %}" class="btn btn-block btn-outline-success">Update Profile</a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
